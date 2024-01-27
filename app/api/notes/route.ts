@@ -10,10 +10,14 @@ export const GET = async () => {
 }
 
 export const POST = async (req: Request) => {
-  const { input } = await req.json()
+  const { input, title } = await req.json()
+
+  if (!title) {
+    return NextResponse.json({ error: "No title provided" }, { status: 400 })
+  }
 
   if (!input) {
-    NextResponse.json({ error: "No input provided" }, { status: 400 })
+    return NextResponse.json({ error: "No input provided" }, { status: 400 })
   }
 
   const embeddingResponse = await openai.embeddings.create({
@@ -28,7 +32,8 @@ export const POST = async (req: Request) => {
 
   const { data, error } = await supabaseClient
     .from("notes")
-    .upsert({
+    .insert({
+      title,
       text: input,
       embedding,
       tokens,

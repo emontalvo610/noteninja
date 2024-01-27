@@ -73,9 +73,9 @@ export const POST = async (req: Request) => {
   ${oneLine`
     You are a very good teacher who loves to help people! Given is some context
     from the user's notes, answer the question using only that information,
-    outputted in markdown format. If you are unsure and the answer is not
-    explicitly written in the notes, say "Sorry, I don't know how to help with
-    that."
+    outputted in markdown format. Try to use content from the context as much as
+    possible but feel free to use your own knowledge as long as it is relevant and
+    you are sure it is correct."
   `}
 
   Context sections:
