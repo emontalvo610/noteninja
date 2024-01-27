@@ -55,8 +55,13 @@ export default function IndexPage() {
                   <p>Loading...</p>
                 )}
               </Card> */}
+              <div className="flex justify-between items-center">
+                <h2 className="text-4xl font-semibold">Notes</h2>
 
-              <h2 className="text-4xl font-semibold">Notes</h2>
+                <Link href="/new" className={buttonVariants()}>
+                  + New Note
+                </Link>
+              </div>
 
               {notes ? (
                 <ul className="mt-8 gap-4 flex flex-col">
