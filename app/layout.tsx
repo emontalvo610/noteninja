@@ -6,6 +6,7 @@ import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import ReactQueryProvider from "@/components/react-query-provider"
 import { SiteHeader } from "@/components/site-header"
+import Toaster from "@/components/sonner"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
@@ -37,15 +38,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <head />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased",
+            "min-h-screen bg-black font-sans antialiased",
             fontSans.variable
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ReactQueryProvider>
               <div className="relative flex min-h-screen flex-col">
-                <SiteHeader />
-                <div className="flex-1">{children}</div>
+                <div className="flex-1 pb-16">
+                  {children}
+                  <Toaster />
+                </div>
               </div>
               <TailwindIndicator />
             </ReactQueryProvider>
