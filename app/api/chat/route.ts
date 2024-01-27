@@ -9,6 +9,12 @@ import { supabaseClient } from "@/lib/supabase"
 
 export const runtime = "edge"
 
+export const GET = async () => {
+  const { data, error } = await supabaseClient.from("notes").select()
+
+  return NextResponse.json({ notes: data, error })
+}
+
 export const POST = async (req: Request) => {
   const { messages } = await req.json()
 
