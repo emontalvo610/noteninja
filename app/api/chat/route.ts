@@ -24,10 +24,7 @@ export const POST = async (req: Request) => {
 
   console.log(messages.length)
 
-  const query = messages
-    .map((message: any) => message.content)
-    .join("\n")
-    .trim()
+  const query = messages[messages.length - 1].content
   const sanitizedQuery = query.replace(/\n/g, " ")
 
   console.log(sanitizedQuery)
@@ -44,13 +41,11 @@ export const POST = async (req: Request) => {
     "match_notes",
     {
       embedding: embedding,
-      match_threshold: 0.3,
+      match_threshold: 0.78,
       match_count: 10,
       min_content_length: 10,
     }
   )
-
-  console.log(notes, matchError)
 
   const tokenizer = new GP3Tokenizer({ type: "gpt3" })
   let tokenCount = 0
@@ -75,8 +70,11 @@ export const POST = async (req: Request) => {
     from the user's notes, answer the question using only that information,
     outputted in markdown format. Try to use content from the context as much as
     possible but feel free to use your own knowledge as long as it is relevant and
-    you are sure it is correct. Format your answers in markdown format and try using
+    you are sure it is correct. If a question is asked and you cant find an answer
+    in the context, use your own knowledge to answer it. If you are not sure about
+    something, just say so. Format your answers in markdown format and try using
     points wherever possible. 
+
   `}
 
   Context sections:
