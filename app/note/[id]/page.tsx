@@ -8,11 +8,18 @@ import { MDXEditor } from "@mdxeditor/editor"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
+import { format } from "date-fns"
+import { XIcon } from "lucide-react"
+import readingTime from "reading-time"
 import rehypeSanitize from "rehype-sanitize"
 import { toast } from "sonner"
 
+import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { IconButton } from "@/components/ui/icon-button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 import { ForwardRefEditor } from "../../../components/mdx-editor"
 
@@ -36,9 +43,17 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
 
   const { mutate: updateNote } = useMutation({
     mutationKey: ["updateNote", id],
-    mutationFn: async ({ newText }: { newText: string }) => {
+    mutationFn: async ({
+      newText,
+      newTags,
+    }: {
+      newText: string
+      newTags: string[]
+    }) => {
       const res = await axios.patch(`/api/notes/${id}`, {
         text: newText,
+        title: note.title,
+        tags: newTags,
       })
 
       await queryClient.refetchQueries({
@@ -69,10 +84,13 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
   })
 
   const [text, setText] = useState<string | undefined>()
+  const [tags, setTags] = useState<string[]>([])
+  const [newTag, setNewTag] = useState<string>("")
 
   useEffect(() => {
     if (note) {
       setText(note.text)
+      setTags(note.tags)
     }
   }, [note])
 
@@ -98,6 +116,52 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
                     {note.title}
                   </h1>
 
+                  <p className="mt-2 text-gray-400">
+                    {note.text.length} characters /{" "}
+                    {note.text.split(" ").length} words /{" "}
+                    {readingTime(note.text).text} / Created at{" "}
+                    {format(new Date(note.created_at), "dd MMM yyyy hh:mm a")}
+                  </p>
+
+                  <div className="w-[12rem] mt-8">
+                    {tags.length > 0 ? (
+                      <div className="flex gap-4">
+                        {tags.map((tag) => (
+                          <div className="flex gap-2">
+                            <Badge>{tag}</Badge>
+                            <IconButton
+                              onClick={() => {
+                                setTags(tags.filter((t) => t !== tag))
+                              }}
+                            >
+                              <XIcon />
+                            </IconButton>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>No tags</p>
+                    )}
+
+                    <div className="flex flex-col gap-2 mt-4">
+                      <Label className="text-xl font-semibold">New Tag</Label>
+                      <Input
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                      />
+
+                      <Button
+                        onClick={() => {
+                          setTags([...tags, newTag])
+                          setNewTag("")
+                        }}
+                        className="mt-2"
+                      >
+                        Add Tag
+                      </Button>
+                    </div>
+                  </div>
+
                   <MDEditor
                     onChange={(e) => setText(e)}
                     value={text}
@@ -116,7 +180,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
                         const toastId = toast.loading("Updating note...")
 
                         updateNote(
-                          { newText: text },
+                          { newText: text, newTags: tags },
                           {
                             onSuccess: () => {
                               toast.success("Note updated!", { id: toastId })

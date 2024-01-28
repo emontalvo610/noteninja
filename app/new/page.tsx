@@ -8,13 +8,17 @@ import { MDXEditor } from "@mdxeditor/editor"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
+import { CrossIcon, XIcon } from "lucide-react"
 import rehypeSanitize from "rehype-sanitize"
 import { toast } from "sonner"
 
+import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { IconButton } from "@/components/ui/icon-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select } from "@/components/ui/select"
 
 const NewPage = () => {
   const queryClient = useQueryClient()
@@ -25,13 +29,16 @@ const NewPage = () => {
     mutationFn: async ({
       newText,
       newTitle,
+      newTags,
     }: {
       newText: string
       newTitle: string
+      newTags: string[]
     }) => {
       const res = await axios.post(`/api/notes`, {
         input: newText,
         title: newTitle,
+        tags: newTags,
       })
 
       await queryClient.refetchQueries({
@@ -46,6 +53,8 @@ const NewPage = () => {
 
   const [text, setText] = useState<string>("")
   const [title, setTitle] = useState<string>("")
+  const [tags, setTags] = useState<string[]>([])
+  const [newTag, setNewTag] = useState<string>("")
 
   return (
     <div className="magicpattern">
@@ -71,6 +80,45 @@ const NewPage = () => {
                 />
               </div>
 
+              <div className="w-[12rem] mt-8">
+                {tags.length > 0 ? (
+                  <div className="flex gap-4">
+                    {tags.map((tag) => (
+                      <div className="flex gap-2">
+                        <Badge>{tag}</Badge>
+                        <IconButton
+                          onClick={() => {
+                            setTags(tags.filter((t) => t !== tag))
+                          }}
+                        >
+                          <XIcon />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No tags</p>
+                )}
+
+                <div className="flex flex-col gap-2 mt-4">
+                  <Label className="text-xl font-semibold">New Tag</Label>
+                  <Input
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                  />
+
+                  <Button
+                    onClick={() => {
+                      setTags([...tags, newTag])
+                      setNewTag("")
+                    }}
+                    className="mt-2"
+                  >
+                    Add Tag
+                  </Button>
+                </div>
+              </div>
+
               <MDEditor
                 onChange={(e) => setText(e as string)}
                 value={text}
@@ -88,7 +136,7 @@ const NewPage = () => {
                   const toastId = toast.loading("Creating note...")
 
                   mutate(
-                    { newText: text, newTitle: title },
+                    { newText: text, newTitle: title, newTags: tags },
                     {
                       onSuccess: () => {
                         toast.success("Note created!", { id: toastId })

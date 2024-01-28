@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useQuery } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
+import { format } from "date-fns"
 import { MessageCircleIcon, MessageSquareIcon } from "lucide-react"
 import readingTime from "reading-time"
 import rehypeSanitize from "rehype-sanitize"
@@ -82,7 +83,11 @@ export default function IndexPage() {
                           <p className="mt-2 text-gray-400">
                             {note.text.length} characters /{" "}
                             {note.text.split(" ").length} words /{" "}
-                            {readingTime(note.text).text}
+                            {readingTime(note.text).text} / Created at{" "}
+                            {format(
+                              new Date(note.created_at),
+                              "dd MMM yyyy hh:mm a"
+                            )}
                           </p>
                           <p className="mt-4 text-gray-400">
                             {note.text.slice(0, 200).trim()}

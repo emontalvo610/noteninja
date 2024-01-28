@@ -21,7 +21,7 @@ export const PATCH = async (
   req: Request,
   { params: { id } }: { params: { id: string } }
 ) => {
-  const { text } = await req.json()
+  const { title, text, tags } = await req.json()
 
   if (!text) {
     NextResponse.json({ error: "No text provided" }, { status: 400 })
@@ -29,9 +29,13 @@ export const PATCH = async (
 
   console.log(text)
 
+  const sanitizedInput = `Title: ${title}\nTags: ${tags.join(
+    ", "
+  )}\n${text.replace(/\n/g, " ")}`
+
   const embeddingResponse = await openai.embeddings.create({
     model: "text-embedding-3-small",
-    input: text.replace(/\n/g, " "),
+    input: sanitizedInput,
     dimensions: 1536,
   })
 
@@ -41,7 +45,7 @@ export const PATCH = async (
 
   const { data, error } = await supabaseClient
     .from("notes")
-    .update({ text, embedding, tokens })
+    .update({ text, embedding, tokens, tags })
     .eq("id", Number(id))
     .select()
     .single()

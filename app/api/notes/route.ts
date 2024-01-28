@@ -10,7 +10,7 @@ export const GET = async () => {
 }
 
 export const POST = async (req: Request) => {
-  const { input, title } = await req.json()
+  const { input, title, tags } = await req.json()
 
   if (!title) {
     return NextResponse.json({ error: "No title provided" }, { status: 400 })
@@ -20,9 +20,13 @@ export const POST = async (req: Request) => {
     return NextResponse.json({ error: "No input provided" }, { status: 400 })
   }
 
+  const sanitizedInput = `Title: ${title}\nTags: ${tags.join(
+    ", "
+  )}\n${input.replace(/\n/g, " ")}`
+
   const embeddingResponse = await openai.embeddings.create({
     model: "text-embedding-3-small",
-    input: input.replace(/\n/g, " "),
+    input: sanitizedInput,
     dimensions: 1536,
   })
 
@@ -37,6 +41,7 @@ export const POST = async (req: Request) => {
       text: input,
       embedding,
       tokens,
+      tags,
     })
     .select()
     .limit(1)
