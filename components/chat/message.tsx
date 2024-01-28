@@ -1,5 +1,6 @@
 import { Message } from "ai"
 import { BotIcon, UserIcon } from "lucide-react"
+import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 
@@ -35,46 +36,34 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
       <div className="flex-1 px-1 ml-4 space-y-2 overflow-hidden">
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
-          remarkPlugins={[remarkGfm, remarkMath]}
+          remarkPlugins={[remarkGfm, remarkMath, rehypeHighlight]}
           components={{
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>
             },
-            code({ node, inline, className, children, ...props }) {
-              if (children.length) {
-                if (children[0] == "▍") {
-                  return (
-                    <span className="mt-1 cursor-default animate-pulse">▍</span>
-                  )
-                }
 
-                children[0] = (children[0] as string).replace("`▍`", "▍")
-              }
-
+            code(props) {
+              const { children, className, node, ...rest } = props
               const match = /language-(\w+)/.exec(className || "")
-
-              if (inline) {
-                return (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                )
-              }
-
-              return (
+              return match ? (
                 <CodeBlock
-                  key={Math.random()}
-                  //   language={(match && match[1]) || ""}
-                  //   value={String(children).replace(/\n$/, "")}
+                  {...rest}
+                  className={cn("mb-2")}
                   snippets={[
                     {
                       code: String(children).replace(/\n$/, ""),
                       label: "",
-                      language: (match && match[1]) || "",
+                      language: match[1],
                     },
                   ]}
-                  {...props}
-                />
+                >
+                  <CodeBlock.Body />
+                </CodeBlock>
+              ) : (
+                // <p className="mb-2 last:mb-0 text-red-500   ">{children}</p>
+                <code {...rest} className={className}>
+                  {children}
+                </code>
               )
             },
           }}
