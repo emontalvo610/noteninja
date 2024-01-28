@@ -1,9 +1,8 @@
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
-
 import { clx } from "@/utils/clx"
 import { Spinner } from "@medusajs/icons"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
 const buttonVariants = cva(
   clx(
@@ -54,7 +53,7 @@ const buttonVariants = cva(
   }
 )
 
-interface ButtonProps
+export interface ButtonProps
   extends React.ComponentPropsWithoutRef<"button">,
     VariantProps<typeof buttonVariants> {
   isLoading?: boolean

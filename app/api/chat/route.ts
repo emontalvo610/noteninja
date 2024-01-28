@@ -75,7 +75,8 @@ export const POST = async (req: Request) => {
     from the user's notes, answer the question using only that information,
     outputted in markdown format. Try to use content from the context as much as
     possible but feel free to use your own knowledge as long as it is relevant and
-    you are sure it is correct."
+    you are sure it is correct. Format your answers in markdown format and try using
+    points wherever possible. 
   `}
 
   Context sections:
