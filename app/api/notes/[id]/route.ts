@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 
+import openai from "@/lib/openai"
 import { supabaseClient } from "@/lib/supabase"
 
 export const GET = async (
@@ -18,7 +19,7 @@ export const GET = async (
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params: { id } }: { params: { id: string } }
 ) => {
   const { text } = await req.json()
 
@@ -26,27 +27,37 @@ export const PATCH = async (
     NextResponse.json({ error: "No text provided" }, { status: 400 })
   }
 
+  console.log(text)
+
+  const embeddingResponse = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: text.replace(/\n/g, " "),
+    dimensions: 1536,
+  })
+
+  const [{ embedding }] = embeddingResponse.data
+
+  const tokens = embeddingResponse.usage.total_tokens
+
   const { data, error } = await supabaseClient
     .from("notes")
-    .update({ text })
-    .eq("id", params.id)
+    .update({ text, embedding, tokens })
+    .eq("id", Number(id))
     .select()
-    .limit(1)
     .single()
 
-  return NextResponse.json({ note: data, error })
+  return NextResponse.json({ note: data, error, embedding, tokens, text, id })
 }
 
 export const DELETE = async (
   _req: Request,
-  { params }: { params: { id: string } }
+  { params: { id } }: { params: { id: string } }
 ) => {
   const { data, error } = await supabaseClient
     .from("notes")
     .delete()
-    .eq("id", params.id)
+    .eq("id", Number(id))
     .select()
-    .limit(1)
     .single()
 
   return NextResponse.json({ notes: data, error })

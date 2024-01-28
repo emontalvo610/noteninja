@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { MDXEditor } from "@mdxeditor/editor"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
 import rehypeSanitize from "rehype-sanitize"
@@ -21,6 +21,8 @@ const Editor = dynamic(() => import("../../../components/mdx-editor"), {
 })
 
 const NotePage = ({ params: { id } }: { params: { id: string } }) => {
+  const queryClient = useQueryClient()
+
   const { data: note } = useQuery({
     queryKey: ["note", id],
     queryFn: async () => {
@@ -35,6 +37,14 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
     mutationFn: async ({ newText }: { newText: string }) => {
       const res = await axios.patch(`/api/notes/${id}`, {
         text: newText,
+      })
+
+      await queryClient.refetchQueries({
+        queryKey: ["note", id],
+      })
+
+      await queryClient.refetchQueries({
+        queryKey: ["notes"],
       })
 
       return res.data.note
@@ -53,7 +63,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
     <div className="magicpattern">
       <div className="h-[100vh] relative py-16 px-8 md:py-24 md:px-32 lg:py-36 lg:px-56">
         <section className="flex flex-col">
-          <div className="flex flex-col items-start gap-2 w-fit">
+          <div className="flex flex-col items-start gap-2">
             <Card className="mt-8">
               <Link
                 href="/"

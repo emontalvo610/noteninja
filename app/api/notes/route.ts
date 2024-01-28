@@ -44,39 +44,3 @@ export const POST = async (req: Request) => {
 
   return NextResponse.json({ note: data, error })
 }
-
-export const PATCH = async (req: Request) => {
-  const { id, text } = await req.json()
-
-  if (!id || !text) {
-    NextResponse.json({ error: "No id or text provided" }, { status: 400 })
-  }
-
-  const { data, error } = await supabaseClient
-    .from("notes")
-    .update({ text })
-    .eq("id", id)
-    .select()
-    .limit(1)
-    .single()
-
-  return NextResponse.json({ note: data, error })
-}
-
-export const DELETE = async (req: Request) => {
-  const { id } = await req.json()
-
-  if (!id) {
-    NextResponse.json({ error: "No id provided" }, { status: 400 })
-  }
-
-  const { data, error } = await supabaseClient
-    .from("notes")
-    .delete()
-    .eq("id", id)
-    .select()
-    .limit(1)
-    .single()
-
-  return NextResponse.json({ note: data, error })
-}

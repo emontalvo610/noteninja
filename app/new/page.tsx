@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { MDXEditor } from "@mdxeditor/editor"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
 import rehypeSanitize from "rehype-sanitize"
@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 const NewPage = () => {
+  const queryClient = useQueryClient()
+
   const { mutate } = useMutation({
     mutationKey: ["createNote"],
     mutationFn: async ({
@@ -28,6 +30,10 @@ const NewPage = () => {
       const res = await axios.post(`/api/notes`, {
         input: newText,
         title: newTitle,
+      })
+
+      await queryClient.refetchQueries({
+        queryKey: ["notes"],
       })
 
       return res.data.note
