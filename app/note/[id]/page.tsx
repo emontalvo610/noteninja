@@ -103,6 +103,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
                     value={text}
                     className="mt-8"
                     height={500}
+                    preview="edit"
                     previewOptions={{
                       rehypePlugins: [[rehypeSanitize]],
                     }}

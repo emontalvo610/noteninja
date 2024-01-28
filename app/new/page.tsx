@@ -76,6 +76,7 @@ const NewPage = () => {
                 value={text}
                 className="mt-8"
                 height={500}
+                preview="edit"
                 previewOptions={{
                   rehypePlugins: [[rehypeSanitize]],
                 }}
