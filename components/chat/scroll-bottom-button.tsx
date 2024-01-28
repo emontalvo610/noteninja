@@ -5,15 +5,14 @@ import { useAtBottom } from "@/utils/hooks/use-at-bottom"
 import { ArrowDownIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button, ButtonProps } from "@/components/ui/button"
 
-export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
+import { IconButton, IconButtonProps } from "../ui/icon-button"
+
+export function ButtonScrollToBottom({ className, ...props }: IconButtonProps) {
   const isAtBottom = useAtBottom()
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
+    <IconButton
       className={cn(
         "absolute right-4 top-1 z-10 bg-background transition-opacity duration-300 sm:right-8 md:top-2",
         isAtBottom ? "opacity-0" : "opacity-100",
@@ -29,6 +28,6 @@ export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
     >
       <ArrowDownIcon />
       <span className="sr-only">Scroll to bottom</span>
-    </Button>
+    </IconButton>
   )
 }
