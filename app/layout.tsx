@@ -5,9 +5,7 @@ import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import ReactQueryProvider from "@/components/react-query-provider"
-import { SiteHeader } from "@/components/site-header"
 import Toaster from "@/components/sonner"
-import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
@@ -50,7 +48,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   <Toaster />
                 </div>
               </div>
-              <TailwindIndicator />
             </ReactQueryProvider>
           </ThemeProvider>
         </body>
