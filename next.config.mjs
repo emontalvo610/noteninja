@@ -13,6 +13,9 @@ const nextConfig = {
     }
     return config
   },
+  experimental: {
+    serverComponentsExternalPackages: ["pdf2json", "pdf-parse"],
+  },
 }
 
 export default nextConfig
