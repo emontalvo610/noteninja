@@ -1,7 +1,12 @@
 {
-  "name": "next-template",
+  "name": "noteninja",
   "version": "0.0.2",
   "private": true,
+  "author": {
+    "name": "Anish De",
+    "email": "contact@anishde.dev",
+    "url": "https://anishde.dev"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
