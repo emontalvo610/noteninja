@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Tooltip } from "@/components/ui/tooltip"
 
+import { Card } from "../ui/card"
 import { IconButton } from "../ui/icon-button"
 
 export interface PromptProps
@@ -45,23 +46,7 @@ export function PromptForm({
       }}
       ref={formRef}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        <Tooltip content="New Chat">
-          <button
-            onClick={(e) => {
-              e.preventDefault()
-              router.refresh()
-              router.push("/")
-            }}
-            className={cn(
-              buttonVariants({ size: "sm", variant: "outline" }),
-              "absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4"
-            )}
-          >
-            <PlusIcon />
-            <span className="sr-only">New Chat</span>
-          </button>
-        </Tooltip>
+      <Card className="relative flex max-h-60 w-full grow flex-col overflow-hidden p-0 py-0 px-4 mb-4">
         <Textarea
           ref={inputRef}
           tabIndex={0}
@@ -81,7 +66,7 @@ export function PromptForm({
             </IconButton>
           </Tooltip>
         </div>
-      </div>
+      </Card>
     </form>
   )
 }

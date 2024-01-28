@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useQuery } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
 import axios from "axios"
+import { MessageCircleIcon, MessageSquareIcon } from "lucide-react"
 import readingTime from "reading-time"
 import rehypeSanitize from "rehype-sanitize"
 
@@ -58,9 +59,16 @@ export default function IndexPage() {
               <div className="flex justify-between items-center">
                 <h2 className="text-4xl font-semibold">Notes</h2>
 
-                <Link href="/new" className={buttonVariants()}>
-                  + New Note
-                </Link>
+                <div className="flex items-center gap-4">
+                  <Link href="/chat" className={buttonVariants()}>
+                    <MessageSquareIcon className="h-4 w-4 mr-1" />
+                    Chat
+                  </Link>
+
+                  <Link href="/new" className={buttonVariants()}>
+                    + New Note
+                  </Link>
+                </div>
               </div>
 
               {notes ? (
