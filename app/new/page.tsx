@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { MDXEditor } from "@mdxeditor/editor"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
@@ -17,6 +18,7 @@ import { Label } from "@/components/ui/label"
 
 const NewPage = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { mutate } = useMutation({
     mutationKey: ["createNote"],
@@ -35,6 +37,8 @@ const NewPage = () => {
       await queryClient.refetchQueries({
         queryKey: ["notes"],
       })
+
+      router.push(`/note/${res.data.note.id}`)
 
       return res.data.note
     },

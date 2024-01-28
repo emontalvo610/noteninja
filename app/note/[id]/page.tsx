@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { MDXEditor } from "@mdxeditor/editor"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import MDEditor from "@uiw/react-md-editor"
@@ -22,6 +23,7 @@ const Editor = dynamic(() => import("../../../components/mdx-editor"), {
 
 const NotePage = ({ params: { id } }: { params: { id: string } }) => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { data: note } = useQuery({
     queryKey: ["note", id],
@@ -32,7 +34,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
     },
   })
 
-  const { mutate } = useMutation({
+  const { mutate: updateNote } = useMutation({
     mutationKey: ["updateNote", id],
     mutationFn: async ({ newText }: { newText: string }) => {
       const res = await axios.patch(`/api/notes/${id}`, {
@@ -46,6 +48,21 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
       await queryClient.refetchQueries({
         queryKey: ["notes"],
       })
+
+      return res.data.note
+    },
+  })
+
+  const { mutate: deleteNote } = useMutation({
+    mutationKey: ["deleteNote", id],
+    mutationFn: async () => {
+      const res = await axios.delete(`/api/notes/${id}`)
+
+      await queryClient.refetchQueries({
+        queryKey: ["notes"],
+      })
+
+      router.push("/")
 
       return res.data.note
     },
@@ -91,29 +108,51 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
                     }}
                   />
 
-                  <Button
-                    className="mt-4"
-                    onClick={() => {
-                      const toastId = toast.loading("Updating note...")
+                  <div className="flex items-center gap-2">
+                    <Button
+                      className="mt-4"
+                      onClick={() => {
+                        const toastId = toast.loading("Updating note...")
 
-                      mutate(
-                        { newText: text },
-                        {
+                        updateNote(
+                          { newText: text },
+                          {
+                            onSuccess: () => {
+                              toast.success("Note updated!", { id: toastId })
+                            },
+                            onError: () => {
+                              toast.error("Failed to update note!", {
+                                id: toastId,
+                              })
+                            },
+                          }
+                        )
+                      }}
+                    >
+                      Update
+                    </Button>
+
+                    <Button
+                      className="mt-4"
+                      variant="danger"
+                      onClick={() => {
+                        const toastId = toast.loading("Deleting note...")
+
+                        deleteNote(undefined, {
                           onSuccess: () => {
-                            toast.success("Note updated!", { id: toastId })
+                            toast.success("Note deleted!", { id: toastId })
                           },
                           onError: () => {
-                            toast.error("Failed to update note!", {
+                            toast.error("Failed to delete note!", {
                               id: toastId,
                             })
                           },
-                        }
-                      )
-                    }}
-                  >
-                    Update
-                  </Button>
-
+                        })
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                   {/* <Editor value={text} onChange={(e) => setText(e)} /> */}
 
                   {/* <ForwardRefEditor
