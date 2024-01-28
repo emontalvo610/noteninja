@@ -26,7 +26,7 @@ export const POST = async (req: Request) => {
     const tempFilePath = `/tmp/${fileName}.pdf`
 
     // Convert ArrayBuffer to Buffer
-    const fileBuffer = Buffer.from(await uploadedFile.arrayBuffer())
+    const fileBuffer = Buffer.from(await (uploadedFile as any).arrayBuffer())
 
     const data = await pdf(fileBuffer)
 
