@@ -1,5 +1,6 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
+import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
@@ -42,8 +43,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ReactQueryProvider>
-              <div className="relative flex min-h-screen flex-col">
-                <div className="flex-1 pb-16">
+              <div className="relative flex min-h-screen flex-col mb-16">
+                <div className="flex-1 pb-16 mb-16">
+                  <Link href="/">
+                    <img
+                      src="/logo.png"
+                      className="h-16 w-auto fixed top-8 left-8 z-50 cursor-pointer"
+                    />
+                  </Link>
+
                   {children}
                   <Toaster />
                 </div>

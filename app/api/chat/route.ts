@@ -73,7 +73,8 @@ export const POST = async (req: Request) => {
     you are sure it is correct. If a question is asked and you cant find an answer
     in the context, use your own knowledge to answer it. If you are not sure about
     something, just say so. Format your answers in markdown format and try using
-    points wherever possible. 
+    points wherever possible. Also make sure to not include any text referring to
+    where you are getting the content from, just give a direct answer to the question.
 
   `}
 

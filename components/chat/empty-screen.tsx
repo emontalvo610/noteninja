@@ -8,11 +8,10 @@ import { Card } from "../ui/card"
 const exampleMessages = [
   {
     heading: "Summarise Digital Asset Standard",
-    message:
-      "What is Digital Asset Standard? What is its relation with Solana? Summarise in about 200 words.",
+    message: "What is Digital Asset Standard? Summarise in about 200 words.",
   },
   {
-    heading: "Summarise State Compression?",
+    heading: "Summarise State Compression",
     message:
       "What is state compression? What is its relation with Solana? Summarise in about 200 words.",
   },

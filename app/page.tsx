@@ -26,14 +26,10 @@ export default function IndexPage() {
   console.log(notes)
 
   return (
-    <div className="magicpattern">
+    <div className="magicpattern mb-32">
       <div className="h-[100vh] relative py-16 px-8 md:py-24 md:px-32 lg:py-36 lg:px-56">
         <section className="flex flex-col">
           <div className="flex flex-col items-start gap-2">
-            <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-              Noteninja
-            </h1>
-
             <div className="flex flex-col max-w-5xl mx-auto mt-16 w-full">
               {/* <Card className="rounded-xl py-8 px-8 w-full">
                 <CardTitle>Notes</CardTitle>
