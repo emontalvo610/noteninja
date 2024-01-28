@@ -71,7 +71,7 @@ export const POST = async (req: Request) => {
     outputted in markdown format. Try to use content from the context as much as
     possible but feel free to use your own knowledge as long as it is relevant and
     you are sure it is correct. If a question is asked and you cant find an answer
-    in the context, use your own knowledge to answer it. If you are not sure about
+    in the context, you should use your own knowledge to answer it. If you are not sure about
     something, just say so. Format your answers in markdown format and try using
     points wherever possible. Also make sure to not include any text referring to
     where you are getting the content from, just give a direct answer to the question.
