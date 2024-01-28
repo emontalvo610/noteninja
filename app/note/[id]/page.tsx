@@ -90,7 +90,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
   useEffect(() => {
     if (note) {
       setText(note.text)
-      setTags(note.tags)
+      setTags(note.tags || [])
     }
   }, [note])
 
@@ -124,7 +124,7 @@ const NotePage = ({ params: { id } }: { params: { id: string } }) => {
                   </p>
 
                   <div className="w-[12rem] mt-8">
-                    {tags.length > 0 ? (
+                    {tags && tags.length > 0 ? (
                       <div className="flex gap-4">
                         {tags.map((tag) => (
                           <div className="flex gap-2">

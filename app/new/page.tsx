@@ -81,7 +81,7 @@ const NewPage = () => {
               </div>
 
               <div className="w-[12rem] mt-8">
-                {tags.length > 0 ? (
+                {tags && tags.length > 0 ? (
                   <div className="flex gap-4">
                     {tags.map((tag) => (
                       <div className="flex gap-2">
